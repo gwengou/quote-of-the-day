@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewpoint" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Final Project</title>
+  <!-- Bootstrap CSS file-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!--my own CSS, be careful not to override Bootstrap-->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- JS files, newer versions available for production -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $("#submitBtn").click(function() {
+        $("#quote").text("");
+        $("#quoteAuthor").remove();
+        var data_array = $("#myForm").serializeArray();
+        var month = Number(data_array[0].value);
+        var day = Number(data_array[1].value);
+
+
+        $.ajax({
+          url: 'quotes/' + month + '/' + day,
+          success: function(res) {
+            $("#quote").text(res.quoteText);
+            $("#quote").after('<p id="quoteAuthor"></p>');
+            $("#quoteAuthor").text(res.quoteAuthor);
+
+          },
+          error: function() {
+            $("#quote").text("Error!");
+            setTimeout(function() {
+              $("#resetBtn").trigger("click");}
+            }, 3 * 1000)
+          }
+        })
+      });
+
+      $("#resetBtn").click(function() {
+        $('#myForm').trigger("reset");
+        $("#quote").text("Quote of the Day");
+        $("#quoteAuthor").text("");
+      })
+
+      $("#localTimeSubmitBtn").click(function() {
+        localTime = new Date();
+        month = localTime.getMonth() + 1;
+        day = localTime.getDate();
+        $("#month").val(month);
+        $("#day").val(day);
+      })
+    });
+  </script>
+
+
+
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-12 col-md-3" id="left">
+        <header>
+          <h1>CCPS 530 Final Project</h1>
+          <h2>by Zhengchao Gou</h2>
+          <h2>Ryerson ID: 501039763</h2>
+        </header>
+      </div>
+
+      <div class="col-12 col-md-4" id="input">
+
+
+        <p> Enter a date of your choice below or use
+          <button type="button" id="localTimeSubmitBtn">your current date: </button>
+        </p>
+
+
+        <form id="myForm">
+          <input type="text" name="month" id="month" placeholder="MM">
+          <br>
+          <input type="text" name="day" id="day" placeholder="DD">
+          <br>
+          <button type="button" id="submitBtn">Submit</button>
+          <button type="button" id="resetBtn">Clear</button>
+
+
+        </form>
+
+      </div>
+
+      <div class="col-12 col-md-5" id="quoteDiv">
+        <h2 id="quote">Quote of the Day</h2>
+      </div>
+
+
+    </div>
+
+
+
+</body>
+
+</html>
+
+<!--
+Marking: functionality, usage of content offered in class, focus on one thing that works well.
+
+login form: use node.js (backend); no functionality - just a gatekeeper, no authentication.
+
+Security: use SSL.
+
+How to submit: zip and submit. Remove node_modules but include a Readme. If you want to include a report showing the functionalities & steps, it will make it easy for Professor to mark.
+  -->
